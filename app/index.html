@@ -1,0 +1,121 @@
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>MYOP</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!-- build:css(.) styles/plugins.css -->
+<!-- bower:css -->
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+<link rel="stylesheet" href="bower_components/highlightjs/styles/xcode.css" />
+<!-- endbower -->
+<!-- endbuild -->
+<!-- build:css(.tmp) styles/main.css -->
+<link rel="stylesheet" href="styles/main.css">
+<!-- endbuild -->
+</head>
+<body>
+	<!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+	<div class="container">
+		<div class="header">
+			<ul class="nav nav-pills pull-right" role="tablist">
+				<li class="active"><a href="#application" role="tab" data-toggle="tab">Application</a></li>
+				<li><a href="#tutoriel" role="tab" data-toggle="tab">Tutoriel</a></li>
+				<li><a href="#apropos" role="tab" data-toggle="tab">À propos</a></li>
+				<li><a href="#contact" role="tab" data-toggle="tab">Contact</a></li>
+			</ul>
+			<h3 class="text-muted"><span class="titrebleu">MYO</span><span class="titrevert">P</span> (<span class="titrebleu">M</span>ake <span class="titrebleu">Y</span>our <span class="titrebleu">O</span>wn <span class="titrevert">P</span>rogram)</h3>
+		</div>
+
+		<div class="tab-content">
+			<div class="tab-pane active in" id="application">
+				<div class="row" id="loading">
+					<div class="col-sm-12 text-center">
+						<img src="images/loading.gif" alt="Chargement" />
+					</div>
+				</div>
+				<div class="row" style="display: none;">
+					<div class="blocksTabs">
+						<ul id="blockTypes" class="nav nav-tabs" role="tablist">
+							<li class="active"><a href="#evenements" role="tab" data-toggle="tab">Événements</a></li>
+							<li><a href="#actions" role="tab" data-toggle="tab">Actions</a></li>
+						</ul>
+						<div class="blocks">
+							<div id="blockTypesContent" class="tab-content">
+								<div class="tab-pane active in" id="evenements"></div>
+								<div class="tab-pane" id="actions"></div>
+							</div>
+						</div>
+					</div>
+					<div class="programEditor">
+						<div class="programContainer">
+							<div class="programPane">
+								<div class="blocksContainer droppable"></div>
+								<div class="codeContainer"><code class="java"></code></div>
+							</div>
+						</div>
+						<div class="toolbar"><span id="openButton" class="btn btn-primary btn-file" style="float: left"><span class="fa fa-cloud-upload"></span> Ouvrir<input type="file"></span><a href="#" id="emptyContainerButton" class="btn btn-danger disabled"><span class="fa fa-trash"></span> Vider</a><a href="#" id="saveButton" download="myop.json" class="btn btn-primary disabled"><span class="fa fa-cloud-download"></span> Enregistrer</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="tutoriel">
+				<iframe width="920" height="518" src="//www.youtube-nocookie.com/embed/vGBD8mF0xFk?rel=0" frameborder="0" allowfullscreen></iframe>
+			</div>
+			<div class="tab-pane" id="apropos">
+				<div class="row">
+					<div class="tuile" style="width: 50%;">
+						<p><img src="images/equipe.png" alt="Équipe MYOBot" style="border-radius: 4px;" /></p>
+						<p>Constituée d’une dizaine d’étudiants, notre équipe rassemble les dominantes IRSI (Intégration des Réseaux et des Systèmes d’Informations) et Mécatronique.</p>
+					</div>
+					<div class="tuile nopadding" style="width: 50%;">
+						<div class="tuile" style="width: 50%;">
+							<p><img src="images/wicos.png" alt="Logo Wicos" style="padding: 4px 0;" /></p>
+							<p>Cette application est distribuée par l’entreprise WiCoS (Wireless Control Solution).</p>
+						</div>
+						<div class="tuile" style="width: 50%;">
+							<p><a href="http://www.eigsi.fr" target="_blank"><img src="images/eigsi.png" alt="Logo EIGSI" /></a></p>
+							<p>MYOP a été développé dans le cadre des projets Innovation et Entreprenariat à l’EIGSI.</p>
+						</div>
+						<div class="tuile" style="width: 100%; padding: 22px 0;">
+							<div class="tuile" style="width: 33.33%;">
+								<p><img src="images/mindstormmyo.png" alt="Robot Mindstorm et MYO" /></p>
+							</div>	
+							<div class="tuile" style="width: 66.67%; padding-top: 10px;">
+								<p>Notre application permet d’apprendre de façon ludique à coder les actions réalisables par un robot LEGO Mindstorm® sous le contrôle de l’utilisateur par la technologie MYOTM.</p>
+							</div>
+						</div>
+						<div class="tuile" style="width: 100%;">
+							<p>Pour ce faire, l'utilisateur doit déplacer des blocs pour associer des actions à des événements. En plus d'observer en temps réel le code Java correspondant, l'utilisateur pourra enregistrer son programme pour l'envoyer au robot et le voir à l'action.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="contact">
+				<iframe src="" data-src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2764.577615715304!2d-1.1543959999999998!3d46.13924300000001!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x480153c44949ca21%3A0xa552521e4627af4c!2sEIGSI+Ecole+d'ing%C3%A9nieurs+g%C3%A9n%C3%A9ralistes%2C+La+Rochelle!5e0!3m2!1sfr!2sfr!4v1413222530423" width="920" height="300" frameborder="0" style="border:0"></iframe>
+			</div>
+	</div>
+
+		<div class="footer">
+			<p>&copy;WiCoS 2014</p>
+		</div>
+
+	</div>
+
+	<!-- build:js(.) scripts/plugins.js -->
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/highlightjs/highlight.pack.js"></script>
+	<!-- endbuild -->
+
+	<!-- build:js({app,.tmp}) scripts/main.js -->
+	<script src="scripts/main.js"></script>
+	<!-- endbuild -->
+</body>
+</html>

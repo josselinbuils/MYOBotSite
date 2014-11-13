@@ -1,0 +1,13 @@
+/node_modules
+/dist
+/.tmp
+/bower_components
+/test
+.DS_Store
+/.jshintrc
+/.project
+/bower.json
+/Gruntfile.js
+/npm-debug.log
+/package.json
+/.editorconfig

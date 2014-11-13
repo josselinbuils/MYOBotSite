@@ -1,0 +1,291 @@
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* Space out content a bit */
+body {
+  padding-top: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.footer {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* Custom page header */
+.header {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 20px;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 15px;
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 15px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 20px;
+}
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+.container {
+	width: 950px !important;
+}
+
+.titrebleu {
+	color: #428bca;
+	font-weight: bold;
+}
+.titrevert {
+	color: #04B612;
+	font-weight: bold;
+}
+
+.blocksTabs {
+	width: 280px;
+}
+
+.blocksContainer {
+	min-height: 394px;
+	width: 212px;
+	float: left;
+	position: relative;
+	border-radius: 4px;
+	padding: 5px;
+}
+
+.codeContainer {
+	float: left;
+	position: relative;
+	width: 405px;
+	min-height: 404px;
+	padding: 5px 5px 5px 15px;
+	margin-left: 10px;
+	border-left: 1px dashed #ccc;
+}
+
+.programEditor {
+	width: 670px;
+}
+
+.programContainer {
+	padding: 5px;
+}
+
+.programPane {
+	max-height: 404px;
+	float: left;
+	position: relative;
+	overflow-y: auto;
+	width: 100%;
+}
+
+.blocksTabs, .programEditor {
+	float: left;
+	position: relative;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.blocks, .programContainer, .toolbar {
+	background-color: #f5f5f5;
+	border: 1px solid #e3e3e3;
+	border-radius: 4px;
+}
+
+.blocks {
+	border-top-left-radius: 0;
+	height: 450px;
+	padding: 10px;
+}
+
+.programContainer {
+	height: 414px;
+}
+
+.toolbar {
+	margin-top: 15px;
+	padding: 0 3px;
+	text-align: right;
+}
+
+.toolbar .btn {
+	margin: 6px 3px;
+}
+
+#blockTypes > li > a {
+	padding: 3px 7px;
+}
+
+#blockTypes {
+	border-bottom: 0;
+}
+
+.block {
+	border-radius: 4px;
+	color: rgba(255, 255, 255, 0.9);
+	box-shadow: 1px 1px 1px #555;
+	font-size: 14px;
+	width: 200px;
+	margin-bottom: 7px;
+}
+
+.block, .block * {
+	cursor: default !important;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.block > div:first-child {
+	padding: 3px 3px 10px 5px;
+}
+
+.block .block {
+	margin: -5px 5px 10px 5px;
+	display: inline-block;
+	width: 190px;
+}
+
+.block .block:last-child {
+	margin-bottom: 5px;
+}
+
+.eventBlock {
+	background-color: #428bca;
+}
+
+.actionBlock {
+	background-color: #04B612;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+	background-color: #f5f5f5;
+}
+
+.removeBlock, .helpBlock {
+	float: right;
+	display: none;
+}
+
+.removeBlock {
+	cursor: pointer !important;
+}
+
+.blocksContainer .block > div:first-child:hover .removeBlock {
+	display: inline;
+}
+
+.blocks .block > div:first-child:hover .helpBlock {
+	display: inline;
+}
+
+input[type=number] {
+	display: inline;
+	width: 35px;
+	color: black;
+	border-radius: 4px;
+	border: 0;
+	background: rgba(255, 255, 255, 0.9);
+	margin: 0 5px 0 5px;
+	padding-left: 3px;
+}
+
+.typeTitle {
+	margin: 15px 0 5px 0;
+	font-size: 12px;
+	color: #777;
+}
+
+.typeTitle:first-child {
+	margin-top: 0;
+}
+
+.tab-pane {
+	overflow-y: auto;
+	max-height: 430px;
+}
+
+.highlight {
+	background: rgb(255, 200, 100) !important;
+}
+
+.btn-file {
+	position: relative;
+	overflow: hidden;
+}
+.btn-file input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	font-size: 100px;
+	text-align: right;
+	filter: alpha(opacity=0);
+	opacity: 0;
+	outline: none;
+	background: white;
+	cursor: inherit;
+	display: block;
+}
+
+.tab {
+	margin-left: 20px;
+}
+
+.hljs {
+	background: none;
+	padding: 0;
+}
+
+#marker {
+	pointer-events: none;
+}
+
+.logoEigsi {
+	margin-left: 30px;
+}
+
+p {
+	text-align: justify;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+.container > .tab-content > .tab-pane {
+	max-height: none !important;
+	overflow: hidden;
+}
+
+.nopadding {
+	padding: 0 !important;
+}
+
+.tuile {
+	position: relative;
+	min-height: 1px;
+	padding-right: 15px;
+	padding-left: 15px;
+	float: left;
+}
