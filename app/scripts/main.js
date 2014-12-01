@@ -2,21 +2,25 @@
 
 $.event.props.push('dataTransfer');
 
+/* Positionnement des blocks dans l'interface */
+
 var eventBlocks = [
-	{ 'title': 'Évènements MYO', 'blocks': ['leftRotation', 'rightRotation', 'fingerSpread', 'fist', 'thumbToPinky'] },
-	{ 'title': 'Évènements NXT', 'blocks': ['detectedSound(50)', 'obstacle(20)', 'contact'] }
+	{ 'title': 'Évènements MYO', 'blocks': ['fingerSpread', 'fist', 'waveIn', 'waveOut', 'thumbToPinky', 'rest'] }
+	//{ 'title': 'Évènements NXT', 'blocks': ['detectedSound(50)', 'obstacle(20)', 'contact'] }
 ];
 
 var actionBlocks = [
-	{ 'title': 'Actions ponctuelles', 'blocks': ['accelerate', 'decelerate', 'playSound'] },
+	{ 'title': 'Actions ponctuelles', 'blocks': ['accelerate', 'decelerate'] }, //playSound
 	{ 'title': 'Actions continues', 'blocks': ['moveForward', 'moveBackward', 'turnLeft', 'turnRight', 'veerLeft', 'veerRight', 'stop'] },
 	{ 'title': 'Actions temporelles', 'blocks': ['timedMoveForward(1)', 'timedMoveBackward(1)', 'timedTurnLeft(1)', 'timedTurnRight(1)', 'timedVeerLeft(1)', 'timedVeerRight(1)', 'timedStop(1)'] }
 ];
 
+// Permet de concaténer n fois une chaîne de caractères
 String.prototype.repeat = function(n) {
     return new Array(n+1).join(this);
 };
 
+// Retourne le code HTML d'un block
 function getBlock(blockType, parameter) {
 	var block;
 	
@@ -39,9 +43,6 @@ function getBlock(blockType, parameter) {
 	case 'fist':
 		block = '<div class="block eventBlock" data-block="fist" data-help="Événement déclenché quand l\'utilisateur du MYO ferme son poing."><div>Fermeture du poing</div></div>';
 		break;
-	case 'leftRotation':
-		block = '<div class="block eventBlock" data-block="leftRotation" data-help="Événement déclenché quand l\'utilisateur du MYO tourne son bras vers la gauche."><div>Rotation à gauche</div></div>';
-		break;
 	case 'moveForward':
 		block = '<div class="block actionBlock" data-block="moveForward" data-help="Le robot avancera tant que de nouvelles consignes ne seront pas exécutées."><div>Avancer</div></div>';
 		break;
@@ -54,8 +55,8 @@ function getBlock(blockType, parameter) {
 	case 'playSound':
 		block = '<div class="block actionBlock" data-block="playSound" data-help="Le robot jouera un son prédéfini."><div>Jouer un son</div></div>';
 		break;
-	case 'rightRotation':
-		block = '<div class="block eventBlock" data-block="rightRotation" data-help="Événement déclenché quand l\'utilisateur du MYO tourne son bras vers la droite."><div>Rotation à droite</div></div>';
+	case 'rest':
+		block = '<div class="block eventBlock" data-block="rest" data-help="Événement actif lorsqu\'aucun évènement n\'est détecté."><div>Aucun</div></div>';
 		break;
 	case 'stop':
 		block = '<div class="block actionBlock" data-block="stop" data-help="Le robot s\'arrêtera et ne bougera plus tant que de nouvelles consignes ne seront pas exécutées."><div>S\'arrêter</div></div>';
@@ -96,22 +97,38 @@ function getBlock(blockType, parameter) {
 	case 'veerRight':
 		block = '<div class="block actionBlock" data-block="veerRight" data-help="Le robot virera à droite tant que de nouvelles consignes ne seront pas exécutées."><div>Virer à droite</div></div>';
 		break;
+	case 'waveIn':
+		block = '<div class="block eventBlock" data-block="waveIn" data-help="Événement déclenché quand l\'utilisateur du MYO plie son poignet vers l\'intérieur de ses bras."><div>Vague intérieure</div></div>';
+		break;
+	case 'waveOut':
+		block = '<div class="block eventBlock" data-block="waveOut" data-help="Événement déclenché quand l\'utilisateur du MYO plie son poignet vers l\'extérieur de ses bras."><div>Vague extérieure</div></div>';
+		break;
 	}
 	
 	return block;
 }
 
+// Transforme un tabeau de blocks JSON en code Java (fonction récursive)
 function arrayToCode(blocksArray, level) {
 	var code = '';
 
+	// Parcours les blocks du tableau
 	$.each(blocksArray, function(index, value) {
+		
+		// Récupère et stocke le type du block
 		var blockType = value instanceof Array ? value[0].toString() : value.toString(), parameter;
 
+		// Si le block contient un paramètre, stocke ce dernier
 		if (blockType.indexOf('(') !== -1) {
+			
+			// Stocke le paramètre
 			parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
+			
+			// Retire le paramètre dans le type du block
 			blockType = blockType.replace(/\([^)]*\)$/, '');			
 		}
 		
+		// Ajoute le code Java du block au code complet
 		switch (blockType) {
 		case 'accelerate':
 			code += '<span class="tab"></span>'.repeat(level) + 'accelerer();<br />' + (level === 1 ? '<br />' : '');
@@ -131,9 +148,6 @@ function arrayToCode(blocksArray, level) {
 		case 'fist':
 			code += '<span class="tab"></span>'.repeat(level) + 'if (fermetureDuPoing() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
-		case 'leftRotation':
-			code += '<span class="tab"></span>'.repeat(level) + 'if (rotationAGauche() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
-			break;
 		case 'moveForward':
 			code += '<span class="tab"></span>'.repeat(level) + 'avancer();<br />' + (level === 1 ? '<br />' : '');
 			break;
@@ -149,11 +163,11 @@ function arrayToCode(blocksArray, level) {
 		case 'thumbToPinky':
 			code += '<span class="tab"></span>'.repeat(level) + '</span>if (liaisonPouceAuriculaire() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
+		case 'rest':
+			code += '<span class="tab"></span>'.repeat(level) + 'if (aucunEvenement() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			break;
 		case 'stop':
 			code += '<span class="tab"></span>'.repeat(level) + 'sarreter();<br />' + (level === 1 ? '<br />' : '');
-			break;
-		case 'rightRotation':
-			code += '<span class="tab"></span>'.repeat(level) + '</span>if (rotationADroite() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'timedMoveBackward':
 			code += '<span class="tab"></span>'.repeat(level) + 'reculer(' + parameter + ');<br />' + (level === 1 ? '<br />' : '');
@@ -188,10 +202,19 @@ function arrayToCode(blocksArray, level) {
 		case 'veerRight':
 			code += '<span class="tab"></span>'.repeat(level) + 'virerADroite();<br />' + (level === 1 ? '<br />' : '');
 			break;
+		case 'waveIn':
+			code += '<span class="tab"></span>'.repeat(level) + 'if (vagueInterieure() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'waveOut':
+			code += '<span class="tab"></span>'.repeat(level) + '</span>if (vagueExterieure() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			break;
 		}
 
+		// Si le block contient d'autres blocks, rappelle la fonction sur son contenu (récursivité)
 		if (value instanceof Array) {
 			code = code.replace(/\[code\]/g, arrayToCode(value[1], level + 1));
+		
+		// Sinon, on retourne le code généré
 		} else {
 			code = code.replace(/\[code\]/g, '');
 		}
@@ -200,75 +223,116 @@ function arrayToCode(blocksArray, level) {
 	return code.replace(/\[code\]/g, '');
 }
 
+// Charge les blocks dans l'interface
 function loadBlocks() {
 	var i, j, blockType, parameter;
 
+	// Parcours les types de blocks évènement (MYO, NXT, etc)
 	for (i = 0; i < eventBlocks.length; i++) {
+		// Affiche le titre du type de block dans l'interface
 		$('#evenements').append('<div class="typeTitle">' + eventBlocks[i].title + '</div>');
 		
+		// Parcours les blocks évènement de ce type
 		for (j = 0; j < eventBlocks[i].blocks.length; j++) {
+			// Récupère le type du block
 			blockType = eventBlocks[i].blocks[j];
 			parameter = null;
 
+			// Vérifie si un paramètre par défaut est défini
 			if (blockType.indexOf('(') !== -1) {
+				
+				// Stocke le paramètre
 				parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
+				
+				// Retire le paramètre dans le type du block
 				blockType = blockType.replace(/\([^)]*\)$/, '');			
 			}
 
+			// Ajoute le block à l'interface
 			$('#evenements').append(getBlock(blockType, parameter));
 		}
 	}
 	
+	// Parcours les types de blocks action (actions ponctuelles, actions continues, etc)
 	for (i = 0; i < actionBlocks.length; i++) {
+		// Affiche le titre du type de block dans l'interface
 		$('#actions').append('<div class="typeTitle">' + actionBlocks[i].title + '</div>');
 		
+		// Parcours les blocks action de ce type
 		for (j = 0; j < actionBlocks[i].blocks.length; j++) {
+			
+			// Récupère le type du block
 			blockType = actionBlocks[i].blocks[j];
 			parameter = null;
 
+			// Vérifie si un paramètre par défaut est défini
 			if (blockType.indexOf('(') !== -1) {
+				
+				// Stocke le paramètre
 				parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
+				
+				// Retire le paramètre dans le type du block
 				blockType = blockType.replace(/\([^)]*\)$/, '');			
 			}
 
+			// Ajoute le block à l'interface
 			$('#actions').append(getBlock(blockType, parameter));
 		}
 	}
 }
 
+// Transforme un tabeau de blocks JSON en code HTML et ajoute le code généré à l'interface pour afficher les blocks (fonction récursive)
 function arrayToBlocks(blocksArray, target) {
+	
+	// Parcours les blocks du tableau
 	$.each(blocksArray, function(index, value) {
+		
+		// Récupère et stocke le type du block
 		var blockType = value instanceof Array ? value[0].toString() : value.toString(), parameter;
 
+		// Si le block contient un paramètre, stocke ce dernier
 		if (blockType.indexOf('(') !== -1) {
+
+			// Stocke le paramètre
 			parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
+			
+			// Retire le paramètre dans le type du block
 			blockType = blockType.replace(/\([^)]*\)$/, '');			
 		}
 		
+		// Ajoute le code HTML du block à l'interface
 		target.append(getBlock(blockType, parameter));
 
+		// Si le block contient d'autres blocks, rappelle la fonction sur son contenu (récursivité)
 		if (value instanceof Array) {
 			arrayToBlocks(value[1], target.children('.block').last());
 		}
 	});
 }
 
+// Transforme les blocks de l'interface en tableau JSON pouvant être transféré au robot NXT
 function blocksToArray(target) {
 	var blocksArray = [];
 
+	// Parcours les blocks de l'interface
 	target.each(function() {
+		// Récupère et stocke le type du block
 		var blockType = $(this).attr('data-block'), newTarget = $(this).children('.block');
 
+		// Si le block contient d'autres blocks, ajoute le block au tableau et rappelle la fonction sur les blocks qu'il contient
 		if (newTarget.length) {
-			blocksArray.push([blockType + ($(this).find('input').first().length ? '(' + $(this).find('input').first().val() + ')' : ''), blocksToArray(newTarget)]);
+			blocksArray.push([blockType + ($(this).children('div').first().find('input').first().length ? '(' + $(this).children('div').first().find('input').first().val() + ')' : ''), blocksToArray(newTarget)]);
+		
+		// Sinon, ajoute juste le block au tableau
 		} else {
-			blocksArray.push(blockType + ($(this).find('input').first().length ? '(' + $(this).find('input').first().val() + ')' : ''));
+			blocksArray.push(blockType + ($(this).children('div').first().find('input').first().length ? '(' + $(this).children('div').first().find('input').first().val() + ')' : ''));
 		}
 	});
 			
 	return blocksArray;
 }
 
+// Met à jour les dimensions de l'interface
 function resize() {
 	var windowHeight = Math.max($(window).height(), 550);
 	
@@ -280,51 +344,82 @@ function resize() {
 	$('.programContainer').css('height', windowHeight - 223);
 }
 
+// Met à jour le tableau JSON et le code Java en fonction des blocks que contient l'interface
 function updateCode() {
-	var blockArray = blocksToArray($('.blocksContainer > .block')), code = arrayToCode(blockArray, 1);
 	
+	// Génère le tableau JSON et le stocke
+	var blockArray = blocksToArray($('.blocksContainer > .block'));
+	
+	// Génère le code Java et le stocke
+	var code = arrayToCode(blockArray, 1);
+	
+	// Affiche le code Java généré
 	$('.codeContainer code').html(code.length ? 'while (1) {<br />' + code.substr(0, code.length - 6) + '}' : '');
 	
-	hljs.configure({useBR: true});
+	/* Affiche la coloration syntaxique */
+	
+	hljs.configure({ useBR: true });
 	
 	$('.codeContainer code').each(function(i, block) {
 	    $(this).removeClass('hljs');
 		hljs.highlightBlock(block);
 	  });
 
+	/* Met à jour la barre d'outils */
+	
+	// Si le conteneur contient des blocks ajoutés par l'utilisateur, met à jour la barre d'outils pour que le fichier correspondant puisse être téléchargé
 	if (blockArray.length) {
-		// Download part
+		
+		// Stocke le fichier contenant le tableau JSON dans l'attribut href du bouton de téléchargement
 		$('#saveButton').attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(blockArray)));
+		
+		// Active le bouton de téléchargement
 		$('#saveButton').removeClass('disabled');
+		
+		// Active le bouton pour vider le conteneur de blocks
 		$('#emptyContainerButton').removeClass('disabled');
 	
 	} else {
-		// Download part
+		
+		// Vide l'attribut href du bouton de téléchargement
 		$('#saveButton').attr('href', '#');
+		
+		// Désactive le bouton de téléchargement
 		$('#saveButton').addClass('disabled');
+		
+		// Désactive le bouton pour vider le conteneur de blocks
 		$('#emptyContainerButton').addClass('disabled');
 	}
 }
 
+// Initialisation de l'interface
 $(function() {
 	var dragElem, gmapInit = false, leaveTimeout;
 	
+	// Charge les blocks dans l'interface
 	loadBlocks();
+	
+	// Redimensionne l'interface
 	resize();
 
+	// Rend les blocks déplaçables
 	$('.block').attr('draggable', true);
 	
+	// Ajoute les boutons d'aide aux blocks
 	$('.block > div:first-child').each(function() {
 		if ($(this).parent().attr('data-help')) {
 			$(this).append('<span class="fa fa-question-circle helpBlock" data-toggle="tooltip"></span>');
 			$(this).find('.helpBlock').tooltip({ placement: 'right', container: 'body', title: $(this).parent().attr('data-help') });
 		}
 	});
-	
+
+	// Ajoute les boutons de supression aux blocks
 	$('.block > div:first-child').append('<span class="fa fa-times-circle removeBlock"></span>');
 	
+	// Fixe le minimum à 1 pour les paramètres
 	$('input[type=number]').attr('min', 1);
 	
+	// Aucune idée
 	$('.container .row').first().remove();
 	$('.container .row').show();
 
@@ -344,7 +439,6 @@ $(function() {
 				$('.blocksContainer').addClass('droppable');
 			}
 		} else if (dragElem.hasClass('actionBlock')) {
-			$('.blocksContainer').addClass('droppable');
 			$('.blocksContainer .eventBlock').addClass('droppable');
 		}
 	});
