@@ -2,7 +2,7 @@
 
 $.event.props.push('dataTransfer');
 
-/* Positionnement des blocks dans l'interface */
+/* Positionnement des blocs dans l'interface */
 
 var eventBlocks = [
 	{ 'title': 'Évènements MYO', 'blocks': ['fingerSpread', 'fist', 'waveIn', 'waveOut', 'thumbToPinky', 'rest'] }
@@ -20,7 +20,7 @@ String.prototype.repeat = function(n) {
     return new Array(n+1).join(this);
 };
 
-// Retourne le code HTML d'un block
+// Retourne le code HTML d'un bloc
 function getBlock(blockType, parameter) {
 	var block;
 	
@@ -108,27 +108,27 @@ function getBlock(blockType, parameter) {
 	return block;
 }
 
-// Transforme un tabeau de blocks JSON en code Java (fonction récursive)
+// Transforme un tabeau de blocs JSON en code Java (fonction récursive)
 function arrayToCode(blocksArray, level) {
 	var code = '';
 
-	// Parcours les blocks du tableau
+	// Parcours les blocs du tableau
 	$.each(blocksArray, function(index, value) {
 		
-		// Récupère et stocke le type du block
+		// Récupère et stocke le type du bloc
 		var blockType = value instanceof Array ? value[0].toString() : value.toString(), parameter;
 
-		// Si le block contient un paramètre, stocke ce dernier
+		// Si le bloc contient un paramètre, stocke ce dernier
 		if (blockType.indexOf('(') !== -1) {
 			
 			// Stocke le paramètre
 			parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
 			
-			// Retire le paramètre dans le type du block
+			// Retire le paramètre dans le type du bloc
 			blockType = blockType.replace(/\([^)]*\)$/, '');			
 		}
 		
-		// Ajoute le code Java du block au code complet
+		// Ajoute le code Java du bloc au code complet
 		switch (blockType) {
 		case 'accelerate':
 			code += '<span class="tab"></span>'.repeat(level) + 'accelerer();<br />' + (level === 1 ? '<br />' : '');
@@ -210,7 +210,7 @@ function arrayToCode(blocksArray, level) {
 			break;
 		}
 
-		// Si le block contient d'autres blocks, rappelle la fonction sur son contenu (récursivité)
+		// Si le bloc contient d'autres blocs, rappelle la fonction sur son contenu (récursivité)
 		if (value instanceof Array) {
 			code = code.replace(/\[code\]/g, arrayToCode(value[1], level + 1));
 		
@@ -223,18 +223,18 @@ function arrayToCode(blocksArray, level) {
 	return code.replace(/\[code\]/g, '');
 }
 
-// Charge les blocks dans l'interface
+// Charge les blocs dans l'interface
 function loadBlocks() {
 	var i, j, blockType, parameter;
 
-	// Parcours les types de blocks évènement (MYO, NXT, etc)
+	// Parcours les types de blocs évènement (MYO, NXT, etc)
 	for (i = 0; i < eventBlocks.length; i++) {
-		// Affiche le titre du type de block dans l'interface
+		// Affiche le titre du type de bloc dans l'interface
 		$('#evenements').append('<div class="typeTitle">' + eventBlocks[i].title + '</div>');
 		
-		// Parcours les blocks évènement de ce type
+		// Parcours les blocs évènement de ce type
 		for (j = 0; j < eventBlocks[i].blocks.length; j++) {
-			// Récupère le type du block
+			// Récupère le type du bloc
 			blockType = eventBlocks[i].blocks[j];
 			parameter = null;
 
@@ -244,24 +244,24 @@ function loadBlocks() {
 				// Stocke le paramètre
 				parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
 				
-				// Retire le paramètre dans le type du block
+				// Retire le paramètre dans le type du bloc
 				blockType = blockType.replace(/\([^)]*\)$/, '');			
 			}
 
-			// Ajoute le block à l'interface
+			// Ajoute le bloc à l'interface
 			$('#evenements').append(getBlock(blockType, parameter));
 		}
 	}
 	
-	// Parcours les types de blocks action (actions ponctuelles, actions continues, etc)
+	// Parcours les types de blocs action (actions ponctuelles, actions continues, etc)
 	for (i = 0; i < actionBlocks.length; i++) {
-		// Affiche le titre du type de block dans l'interface
+		// Affiche le titre du type de bloc dans l'interface
 		$('#actions').append('<div class="typeTitle">' + actionBlocks[i].title + '</div>');
 		
-		// Parcours les blocks action de ce type
+		// Parcours les blocs action de ce type
 		for (j = 0; j < actionBlocks[i].blocks.length; j++) {
 			
-			// Récupère le type du block
+			// Récupère le type du bloc
 			blockType = actionBlocks[i].blocks[j];
 			parameter = null;
 
@@ -271,59 +271,59 @@ function loadBlocks() {
 				// Stocke le paramètre
 				parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
 				
-				// Retire le paramètre dans le type du block
+				// Retire le paramètre dans le type du bloc
 				blockType = blockType.replace(/\([^)]*\)$/, '');			
 			}
 
-			// Ajoute le block à l'interface
+			// Ajoute le bloc à l'interface
 			$('#actions').append(getBlock(blockType, parameter));
 		}
 	}
 }
 
-// Transforme un tabeau de blocks JSON en code HTML et ajoute le code généré à l'interface pour afficher les blocks (fonction récursive)
+// Transforme un tabeau de blocs JSON en code HTML et ajoute le code généré à l'interface pour afficher les blocs (fonction récursive)
 function arrayToBlocks(blocksArray, target) {
 	
-	// Parcours les blocks du tableau
+	// Parcours les blocs du tableau
 	$.each(blocksArray, function(index, value) {
 		
-		// Récupère et stocke le type du block
+		// Récupère et stocke le type du bloc
 		var blockType = value instanceof Array ? value[0].toString() : value.toString(), parameter;
 
-		// Si le block contient un paramètre, stocke ce dernier
+		// Si le bloc contient un paramètre, stocke ce dernier
 		if (blockType.indexOf('(') !== -1) {
 
 			// Stocke le paramètre
 			parameter = parseInt(blockType.replace(/[^(]*\(([^)]*)\)$/, '$1'));
 			
-			// Retire le paramètre dans le type du block
+			// Retire le paramètre dans le type du bloc
 			blockType = blockType.replace(/\([^)]*\)$/, '');			
 		}
 		
-		// Ajoute le code HTML du block à l'interface
+		// Ajoute le code HTML du bloc à l'interface
 		target.append(getBlock(blockType, parameter));
 
-		// Si le block contient d'autres blocks, rappelle la fonction sur son contenu (récursivité)
+		// Si le bloc contient d'autres blocs, rappelle la fonction sur son contenu (récursivité)
 		if (value instanceof Array) {
 			arrayToBlocks(value[1], target.children('.block').last());
 		}
 	});
 }
 
-// Transforme les blocks de l'interface en tableau JSON pouvant être transféré au robot NXT
+// Transforme les blocs de l'interface en tableau JSON pouvant être transféré au robot NXT
 function blocksToArray(target) {
 	var blocksArray = [];
 
-	// Parcours les blocks de l'interface
+	// Parcours les blocs de l'interface
 	target.each(function() {
-		// Récupère et stocke le type du block
+		// Récupère et stocke le type du bloc
 		var blockType = $(this).attr('data-block'), newTarget = $(this).children('.block');
 
-		// Si le block contient d'autres blocks, ajoute le block au tableau et rappelle la fonction sur les blocks qu'il contient
+		// Si le bloc contient d'autres blocs, ajoute le bloc au tableau et rappelle la fonction sur les blocs qu'il contient
 		if (newTarget.length) {
 			blocksArray.push([blockType + ($(this).children('div').first().find('input').first().length ? '(' + $(this).children('div').first().find('input').first().val() + ')' : ''), blocksToArray(newTarget)]);
 		
-		// Sinon, ajoute juste le block au tableau
+		// Sinon, ajoute juste le bloc au tableau
 		} else {
 			blocksArray.push(blockType + ($(this).children('div').first().find('input').first().length ? '(' + $(this).children('div').first().find('input').first().val() + ')' : ''));
 		}
@@ -344,7 +344,7 @@ function resize() {
 	$('.programContainer').css('height', windowHeight - 223);
 }
 
-// Met à jour le tableau JSON et le code Java en fonction des blocks que contient l'interface
+// Met à jour le tableau JSON et le code Java en fonction des blocs que contient l'interface
 function updateCode() {
 	
 	// Génère le tableau JSON et le stocke
@@ -367,7 +367,7 @@ function updateCode() {
 
 	/* Met à jour la barre d'outils */
 	
-	// Si le conteneur contient des blocks ajoutés par l'utilisateur, met à jour la barre d'outils pour que le fichier correspondant puisse être téléchargé
+	// Si le conteneur contient des blocs ajoutés par l'utilisateur, met à jour la barre d'outils pour que le fichier correspondant puisse être téléchargé
 	if (blockArray.length) {
 		
 		// Stocke le fichier contenant le tableau JSON dans l'attribut href du bouton de téléchargement
@@ -376,7 +376,7 @@ function updateCode() {
 		// Active le bouton de téléchargement
 		$('#saveButton').removeClass('disabled');
 		
-		// Active le bouton pour vider le conteneur de blocks
+		// Active le bouton pour vider le conteneur de blocs
 		$('#emptyContainerButton').removeClass('disabled');
 	
 	} else {
@@ -387,25 +387,25 @@ function updateCode() {
 		// Désactive le bouton de téléchargement
 		$('#saveButton').addClass('disabled');
 		
-		// Désactive le bouton pour vider le conteneur de blocks
+		// Désactive le bouton pour vider le conteneur de blocs
 		$('#emptyContainerButton').addClass('disabled');
 	}
 }
 
 // Initialisation de l'interface
 $(function() {
-	var dragElem, gmapInit = false, leaveTimeout;
+	var dragElem, leaveTimeout;
 	
-	// Charge les blocks dans l'interface
+	// Charge les blocs dans l'interface
 	loadBlocks();
 	
 	// Redimensionne l'interface
 	resize();
 
-	// Rend les blocks déplaçables
+	// Rend les blocs déplaçables
 	$('.block').attr('draggable', true);
 	
-	// Ajoute les boutons d'aide aux blocks
+	// Ajoute les boutons d'aide aux blocs
 	$('.block > div:first-child').each(function() {
 		if ($(this).parent().attr('data-help')) {
 			$(this).append('<span class="fa fa-question-circle helpBlock" data-toggle="tooltip"></span>');
@@ -413,53 +413,129 @@ $(function() {
 		}
 	});
 
-	// Ajoute les boutons de supression aux blocks
+	// Ajoute les boutons de suppression aux blocs
 	$('.block > div:first-child').append('<span class="fa fa-times-circle removeBlock"></span>');
 	
 	// Fixe le minimum à 1 pour les paramètres
 	$('input[type=number]').attr('min', 1);
 	
-	// Aucune idée
+	// Cache l'animation de chargement
 	$('.container .row').first().remove();
+	
+	// Affiche l'interface
 	$('.container .row').show();
 
+	// Évènement déclenché lorsqu'on commence à déplacer un bloc
 	$(document).on('dragstart', '.block', function(e) {
+		
+		// Empêche l'exécution des actions par défaut
 		e.stopPropagation();
+		
+		// Fixe le type d'action autorisé lors du drag&drop 
 		e.dataTransfer.effectAllowed = 'copy';
+		
+		// Indispensable pour que le drag&drop fonctionne dans Firefox
 		e.dataTransfer.setData('text/plain', '');
 		
+		// Cache les boutons d'aide et de suppression du bloc
 		$('.helpBlock, .removeBlock').css('display', 'none');
 		
+		// Stocke l'identifiant du bloc en mouvement
 		dragElem = $(this);
 
+		/* Gestion des conteneurs suceptibles de recevoir ce bloc */
+		
+		// Supprime tous les conteneurs actuellement autorisés
 		$('.droppable').removeClass('droppable');
 		
+		// Bloc évènement
 		if (dragElem.hasClass('eventBlock')) {
+			
+			/* 
+			 * Conditions pour pouvoir positionner ce bloc dans le conteneur principal :
+			 * - Ce bloc était déjà à l'intérieur du conteneur principal avant d'être déplacé
+			 * - Le conteneur principal ne contient pas encore de bloc de ce type
+			 */
 			if ($(this).parents('.blocksContainer').length || !$('.blocksContainer .eventBlock[data-block=' + $(this).attr('data-block') +  ']').length) {
 				$('.blocksContainer').addClass('droppable');
 			}
+			
+		// Bloc action
 		} else if (dragElem.hasClass('actionBlock')) {
-			$('.blocksContainer .eventBlock').addClass('droppable');
+			
+			// Action temporisée
+			if (dragElem.attr('data-block').indexOf('timed') !== -1) {
+				
+				// Parcourt les blocs évènement dans le conteneur principal
+				$('.blocksContainer .eventBlock').each(function() {
+					
+					// Vérifie que le bloc évènement ne contienne pas d'action non temporisée
+					if ($(this).find('.actionBlock[data-block^=timed]').length == $(this).find('.block').length) {
+						
+						// Autorise le bloc évènement à recevoir l'action
+						$(this).addClass('droppable');
+					}
+				});
+
+			// Action ponctuelle ou continue
+			} else {
+				
+				// Parcourt les blocs évènement dans le conteneur principal
+				$('.blocksContainer .eventBlock').each(function() {
+					
+					console.log(dragElem.parents('eventBlock[data-block=' + $(this).attr('data-block') + ']').length);
+					
+					// Vérifie que le bloc évènement ne contienne pas d'action ou qu'il contienne l'action déplacée
+					if ($(this).find('.block').length == 0 || dragElem.parents('.eventBlock[data-block=' + $(this).attr('data-block') + ']').length) {
+						
+						// Autorise le bloc évènement à recevoir l'action
+						$(this).addClass('droppable');
+					}
+				});
+			}
 		}
 	});
 	
+	// Évènement déclenché lorsqu'on relache un bloc
 	$(document).on('dragend', '.block', function() {
+		
+		// Autorise les boutons d'aide et de suppression du bloc à s'afficher à nouveau
 		$('.helpBlock, .removeBlock').css('display', '');
+		
+		// Retire la couleur orange du conteneur
 		$('.droppable').removeClass('highlight');
+		
+		// Supprime le marqueur du bloc déplacé
 		$('#marker').remove();
+		
+		// Met à jour le code
 		updateCode();
 	});
 	
+	// Évènement déclenché lorsqu'on bouge la souris (sert uniquement au cas où l'évènement dragend ne se déclenche pas)
 	$(document).on('mousemove', function() {
+		
+		// Vérifie si un bloc a été déplacé
 		if ($('#marker').length) {
+			
+			// Autorise les boutons d'aide et de suppression du bloc à s'afficher à nouveau
 			$('.helpBlock, .removeBlock').css('display', '');
+			
+			// Retire la couleur orange du conteneur
 			$('.droppable').removeClass('highlight');
+			
+			// Supprime le marqueur du bloc déplacé
 			$('#marker').remove();
+			
+			// Met à jour le code
 			updateCode();
 		}
 	});
 
+	// Évènement déclenché lorsqu'un bloc survole un conteneur autorisé
 	$(document).on('dragover', '.droppable', function(e) {
+		
+		// Empêche l'exécution des actions par défaut
 		e.preventDefault();
 		e.stopPropagation();
 		
@@ -590,13 +666,5 @@ $(function() {
 	
 	$(window).on('resize', function() {
 		resize();
-	});
-	
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function() {
-		if ($(this).attr('href') === '#contact' && !gmapInit) {
-			var map = $('#contact').find('iframe');
-			map.attr('src', map.attr('data-src'));
-			gmapInit = true;
-		}
 	});
 });
