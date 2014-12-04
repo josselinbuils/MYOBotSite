@@ -5,7 +5,7 @@ $.event.props.push('dataTransfer');
 /* Positionnement des blocs dans l'interface */
 
 var eventBlocks = [
-	{ 'title': 'Évènements MYO', 'blocks': ['fingerSpread', 'fist', 'waveIn', 'waveOut', 'thumbToPinky', 'rest'] }
+	{ 'title': 'Évènements MYO', 'blocks': ['fingerSpread', 'fist', 'waveIn', 'waveOut', 'doubleTap', 'rest'] }
 	//{ 'title': 'Évènements NXT', 'blocks': ['detectedSound(50)', 'obstacle(20)', 'contact'] }
 ];
 
@@ -37,6 +37,9 @@ function getBlock(blockType, parameter) {
 	case 'detectedSound':
 		block = '<div class="block eventBlock" data-block="detectedSound" data-help="Événement déclenché quand l\'intensité sonore dépasse le niveau défini par l\'utilisateur."><div>Bruit supérieur à<input type="number" value="' + parameter + '">dB</div></div>';
 		break;
+	case 'doubleTap':
+		block = '<div class="block eventBlock" data-block="doubleTap" data-help="Événement déclenché quand l\'utilisateur du MYO tape 2 fois son pouce avec ses autres doigts."><div>Tap tap</div></div>';
+		break;
 	case 'fingerSpread':
 		block = '<div class="block eventBlock" data-block="fingerSpread" data-help="Événement déclenché quand l\'utilisateur du MYO écarte ses doigts."><div>Écartement des doigts</div></div>';
 		break;
@@ -60,9 +63,6 @@ function getBlock(blockType, parameter) {
 		break;
 	case 'stop':
 		block = '<div class="block actionBlock" data-block="stop" data-help="Le robot s\'arrêtera et ne bougera plus tant que de nouvelles consignes ne seront pas exécutées."><div>S\'arrêter</div></div>';
-		break;
-	case 'thumbToPinky':
-		block = '<div class="block eventBlock" data-block="thumbToPinky" data-help="Événement déclenché quand l\'utilisateur du MYO relie son puce et son auriculaire."><div>Liaison pouce/auriculaire</div></div>';
 		break;
 	case 'timedMoveBackward':
 		block = '<div class="block actionBlock" data-block="timedMoveBackward" data-help="Le robot reculera pendant la durée définie par l\'utilisateur."><div>Reculer<input type="number" value="' + parameter + '">s</div></div>';
@@ -142,6 +142,9 @@ function arrayToCode(blocksArray, level) {
 		case 'detectedSound':
 			code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() >= ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
+		case 'doubleTap':
+			code += '<span class="tab"></span>'.repeat(level) + '</span>if (tapTap() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			break;
 		case 'fingerSpread':
 			code += '<span class="tab"></span>'.repeat(level) + 'if (ecartementDesDoigts() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
@@ -159,9 +162,6 @@ function arrayToCode(blocksArray, level) {
 			break;
 		case 'playSound':
 			code += '<span class="tab"></span>'.repeat(level) + 'jouerUnSon();<br />' + (level === 1 ? '<br />' : '');
-			break;
-		case 'thumbToPinky':
-			code += '<span class="tab"></span>'.repeat(level) + '</span>if (liaisonPouceAuriculaire() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'rest':
 			code += '<span class="tab"></span>'.repeat(level) + 'if (aucunEvenement() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
@@ -347,6 +347,19 @@ function resize() {
 // Met à jour le tableau JSON et le code Java en fonction des blocs que contient l'interface
 function updateCode() {
 	
+	/* Protection contre les valeurs négatives dans les blocs action temporisée */
+	
+	// Parcourt les blocs action temporisée dans le conteneur principal
+	$('.blocksContainer .actionBlock[data-block^=timed]').each(function() {
+		
+		// Vérifie que le bloc ne contienne pas de valeur négative
+		if ($(this).find('input').val() < 1) {
+			
+			// Fixe la valeur du paramètre à 1 dans le bloc
+			$(this).find('input').val(1);
+		}
+	});
+	
 	// Génère le tableau JSON et le stocke
 	var blockArray = blocksToArray($('.blocksContainer > .block'));
 	
@@ -462,22 +475,22 @@ $(function() {
 			
 		// Bloc action
 		} else if (dragElem.hasClass('actionBlock')) {
-			
-			// Action temporisée
-			if (dragElem.attr('data-block').indexOf('timed') !== -1) {
+
+			// Action ponctuelle ou temporisée
+			if (dragElem.attr('data-block') == 'accelerate' || dragElem.attr('data-block') == 'decelerate' || dragElem.attr('data-block').indexOf('timed') !== -1) {
 				
 				// Parcourt les blocs évènement dans le conteneur principal
 				$('.blocksContainer .eventBlock').each(function() {
 					
-					// Vérifie que le bloc évènement ne contienne pas d'action non temporisée
-					if ($(this).find('.actionBlock[data-block^=timed]').length == $(this).find('.block').length) {
+					// Vérifie que le bloc évènement ne contienne pas d'action continue
+					if ($(this).find('.actionBlock[data-block^=timed]').length == $(this).find('.block').length || $(this).find('.actionBlock[data-block=accelerate]').length > 0 || $(this).find('.actionBlock[data-block=decelerate]').length > 0) {
 						
 						// Autorise le bloc évènement à recevoir l'action
 						$(this).addClass('droppable');
 					}
 				});
 
-			// Action ponctuelle ou continue
+			// Action continue
 			} else {
 				
 				// Parcourt les blocs évènement dans le conteneur principal
