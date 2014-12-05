@@ -289,3 +289,8 @@ p:last-child {
 	padding-left: 15px;
 	float: left;
 }
+
+.alert {
+	padding: 7px 10px;
+	margin: 10px 0 0 0;
+}

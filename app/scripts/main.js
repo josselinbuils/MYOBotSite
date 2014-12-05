@@ -2,11 +2,13 @@
 
 $.event.props.push('dataTransfer');
 
+var blockArray;
+
 /* Positionnement des blocs dans l'interface */
 
 var eventBlocks = [
 	{ 'title': 'Évènements MYO', 'blocks': ['fingerSpread', 'fist', 'waveIn', 'waveOut', 'doubleTap', 'rest'] }
-	//{ 'title': 'Évènements NXT', 'blocks': ['detectedSound(50)', 'obstacle(20)', 'contact'] }
+	//{ 'title': 'Évènements NXT', 'blocks': ['soundSup(50)', 'obstacle(20)', 'contact'] }
 ];
 
 var actionBlocks = [
@@ -29,13 +31,10 @@ function getBlock(blockType, parameter) {
 		block = '<div class="block actionBlock" data-block="accelerate" data-help="La vitesse nominale du robot augmentera d\'un certain seuil."><div>Accélérer</div></div>';
 		break;
 	case 'contact':
-		block = '<div class="block eventBlock" data-block="contact" data-help="Événement déclenché quand le robot entre en contact avec un obstacle."><div>Contact avec obstacle</div></div>';
+		//block = '<div class="block eventBlock" data-block="contact" data-help="Événement déclenché quand le robot entre en contact avec un obstacle."><div>Contact avec obstacle</div></div>';
 		break;
 	case 'decelerate':
 		block = '<div class="block actionBlock" data-block="decelerate" data-help="La vitesse nominale du robot diminuera d\'un certain seuil."><div>Décélérer</div></div>';
-		break;
-	case 'detectedSound':
-		block = '<div class="block eventBlock" data-block="detectedSound" data-help="Événement déclenché quand l\'intensité sonore dépasse le niveau défini par l\'utilisateur."><div>Bruit supérieur à<input type="number" value="' + parameter + '">dB</div></div>';
 		break;
 	case 'doubleTap':
 		block = '<div class="block eventBlock" data-block="doubleTap" data-help="Événement déclenché quand l\'utilisateur du MYO tape 2 fois son pouce avec ses autres doigts."><div>Tap tap</div></div>';
@@ -53,13 +52,19 @@ function getBlock(blockType, parameter) {
 		block = '<div class="block actionBlock" data-block="moveBackward" data-help="Le robot reculera tant que de nouvelles consignes ne seront pas exécutées."><div>Reculer</div></div>';
 		break;
 	case 'obstacle':
-		block = '<div class="block eventBlock" data-block="obstacle" data-help="Événement déclenché quand le robot détecte un obstacle à une distance définie par l\'utilisateur."><div>Obstacle à<input type="number" value="' + parameter + '">cm</div></div>';
+		//block = '<div class="block eventBlock" data-block="obstacle" data-help="Événement déclenché quand le robot détecte un obstacle à une distance définie par l\'utilisateur."><div>Obstacle à<input type="number" value="' + parameter + '">cm</div></div>';
 		break;
 	case 'playSound':
 		block = '<div class="block actionBlock" data-block="playSound" data-help="Le robot jouera un son prédéfini."><div>Jouer un son</div></div>';
 		break;
 	case 'rest':
 		block = '<div class="block eventBlock" data-block="rest" data-help="Événement actif lorsqu\'aucun évènement n\'est détecté."><div>Aucun</div></div>';
+		break;
+	case 'soundInf':
+		//block = '<div class="block eventBlock" data-block="soundInf" data-help="Événement déclenché quand l\'intensité sonore devient inférieur au niveau défini par l\'utilisateur."><div>Bruit inférieur à<input type="number" value="' + parameter + '">dB</div></div>';
+		break;
+	case 'soundSup':
+		//block = '<div class="block eventBlock" data-block="soundSup" data-help="Événement déclenché quand l\'intensité sonore devient supérieur au niveau défini par l\'utilisateur."><div>Bruit supérieur à<input type="number" value="' + parameter + '">dB</div></div>';
 		break;
 	case 'stop':
 		block = '<div class="block actionBlock" data-block="stop" data-help="Le robot s\'arrêtera et ne bougera plus tant que de nouvelles consignes ne seront pas exécutées."><div>S\'arrêter</div></div>';
@@ -134,13 +139,10 @@ function arrayToCode(blocksArray, level) {
 			code += '<span class="tab"></span>'.repeat(level) + 'accelerer();<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'contact':
-			code += '<span class="tab"></span>'.repeat(level) + 'if (contactAvecObstacle() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			//code += '<span class="tab"></span>'.repeat(level) + 'if (contactAvecObstacle() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'decelerate':
 			code += '<span class="tab"></span>'.repeat(level) + 'decelerer();<br />' + (level === 1 ? '<br />' : '');
-			break;
-		case 'detectedSound':
-			code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() >= ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'doubleTap':
 			code += '<span class="tab"></span>'.repeat(level) + '</span>if (tapTap() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
@@ -158,13 +160,19 @@ function arrayToCode(blocksArray, level) {
 			code += '<span class="tab"></span>'.repeat(level) + 'reculer();<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'obstacle':
-			code += '<span class="tab"></span>'.repeat(level) + '</span>if (distanceAvecObstacle() <= ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			//code += '<span class="tab"></span>'.repeat(level) + '</span>if (distanceAvecObstacle() <= ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'playSound':
 			code += '<span class="tab"></span>'.repeat(level) + 'jouerUnSon();<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'rest':
 			code += '<span class="tab"></span>'.repeat(level) + 'if (aucunEvenement() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'soundInf':
+			//code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() < ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'soundSup':
+			//code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() > ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'stop':
 			code += '<span class="tab"></span>'.repeat(level) + 'sarreter();<br />' + (level === 1 ? '<br />' : '');
@@ -361,7 +369,7 @@ function updateCode() {
 	});
 	
 	// Génère le tableau JSON et le stocke
-	var blockArray = blocksToArray($('.blocksContainer > .block'));
+	blockArray = blocksToArray($('.blocksContainer > .block'));
 	
 	// Génère le code Java et le stocke
 	var code = arrayToCode(blockArray, 1);
@@ -382,10 +390,6 @@ function updateCode() {
 	
 	// Si le conteneur contient des blocs ajoutés par l'utilisateur, met à jour la barre d'outils pour que le fichier correspondant puisse être téléchargé
 	if (blockArray.length) {
-		
-		// Stocke le fichier contenant le tableau JSON dans l'attribut href du bouton de téléchargement
-		$('#saveButton').attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(blockArray)));
-		
 		// Active le bouton de téléchargement
 		$('#saveButton').removeClass('disabled');
 		
@@ -393,10 +397,6 @@ function updateCode() {
 		$('#emptyContainerButton').removeClass('disabled');
 	
 	} else {
-		
-		// Vide l'attribut href du bouton de téléchargement
-		$('#saveButton').attr('href', '#');
-		
 		// Désactive le bouton de téléchargement
 		$('#saveButton').addClass('disabled');
 		
@@ -433,10 +433,25 @@ $(function() {
 	$('input[type=number]').attr('min', 1);
 	
 	// Cache l'animation de chargement
-	$('.container .row').first().remove();
-	
-	// Affiche l'interface
-	$('.container .row').show();
+	$('.container #loading').remove();
+		
+	// Vérifie si l'utilisateur est connecté
+	$.post('php/api.php?action=checkConnection', function (data) {
+		if (data !== 'NotConnected') {
+			
+			getProgram(function () {
+				
+				// Affiche l'interface
+				$('.container #interface').show();
+				
+				// Affiche l'utilisateur
+				$('.toolbar #user').html(data);
+			});
+		} else {
+			// Affiche le formulaire de connexion
+			$('.container #connectionForm').show();
+		}
+	});
 
 	// Évènement déclenché lorsqu'on commence à déplacer un bloc
 	$(document).on('dragstart', '.block', function(e) {
@@ -477,13 +492,13 @@ $(function() {
 		} else if (dragElem.hasClass('actionBlock')) {
 
 			// Action ponctuelle ou temporisée
-			if (dragElem.attr('data-block') == 'accelerate' || dragElem.attr('data-block') == 'decelerate' || dragElem.attr('data-block').indexOf('timed') !== -1) {
+			if (dragElem.attr('data-block') === 'accelerate' || dragElem.attr('data-block') === 'decelerate' || dragElem.attr('data-block').indexOf('timed') !== -1) {
 				
 				// Parcourt les blocs évènement dans le conteneur principal
 				$('.blocksContainer .eventBlock').each(function() {
 					
 					// Vérifie que le bloc évènement ne contienne pas d'action continue
-					if ($(this).find('.actionBlock[data-block^=timed]').length == $(this).find('.block').length || $(this).find('.actionBlock[data-block=accelerate]').length > 0 || $(this).find('.actionBlock[data-block=decelerate]').length > 0) {
+					if ($(this).find('.actionBlock[data-block^=timed]').length === $(this).find('.block').length || $(this).find('.actionBlock[data-block=accelerate]').length > 0 || $(this).find('.actionBlock[data-block=decelerate]').length > 0) {
 						
 						// Autorise le bloc évènement à recevoir l'action
 						$(this).addClass('droppable');
@@ -499,7 +514,7 @@ $(function() {
 					console.log(dragElem.parents('eventBlock[data-block=' + $(this).attr('data-block') + ']').length);
 					
 					// Vérifie que le bloc évènement ne contienne pas d'action ou qu'il contienne l'action déplacée
-					if ($(this).find('.block').length == 0 || dragElem.parents('.eventBlock[data-block=' + $(this).attr('data-block') + ']').length) {
+					if ($(this).find('.block').length === 0 || dragElem.parents('.eventBlock[data-block=' + $(this).attr('data-block') + ']').length) {
 						
 						// Autorise le bloc évènement à recevoir l'action
 						$(this).addClass('droppable');
@@ -681,3 +696,102 @@ $(function() {
 		resize();
 	});
 });
+
+/* Gestion utilisateurs */
+
+function connection() {
+	$('.container #connectionForm form .alert').remove();
+	
+	// Vérifie si les champs sont remplis
+	var res = true
+	$('.container #connectionForm form').find('input').each(function() {
+		if (!$(this).val()) {
+			$(this).after(showAlert('danger', 'Ce champ doit être rempli.'));
+			res = false;
+		}
+	});
+	
+	if (res) {
+	
+		$('.container #connectionForm button[type=submit]').prop('disabled', true);
+		
+		$.post('php/api.php?action=connection', $('#connectionForm form').serialize(), function (data) {
+			
+			switch (data) {
+			
+			case 'BadPasswordError':
+				$('#connectionForm form button[type=submit]').after(showAlert('danger', 'Mot de passe invalide.'));
+				break;
+
+			case 'BadUserError':
+				$('#connectionForm form button[type=submit]').after(showAlert('danger', 'Utilisateur inconnu.'));
+				break;
+
+			case 'Connected':
+				// Cache le formulaire de connexion
+				$('.container #connectionForm').hide();
+				
+				// Affiche le nom de l'utilisateur dans la toolbar
+				$('.toolbar #user').html($('.container #connectionForm #user').val());
+				
+				getProgram(function () {
+					// Affiche l'interface
+					$('.container #interface').show();
+
+					// Vide le formulaire
+					$('.container #connectionForm #user').val('')
+					$('.container #connectionForm #password').val('')
+				});
+				break;
+			}
+
+			$('.container #connectionForm button[type=submit]').prop('disabled', false);
+		});
+	}
+}
+
+function getProgram(callback) {
+	$.get('php/api.php?action=getProgram', function (data) {
+		if (data !== 'NothingError') {
+			arrayToBlocks($.parseJSON(data), $('.blocksContainer'));
+			
+			$('.blocksContainer .block').attr('draggable', true);
+			$('.blocksContainer .block > div:first-child').append('<span class="fa fa-times-circle removeBlock"></span>');
+			$('input[type=number]').attr('min', 1);
+			$('input[type=number]').attr('max', 30);
+			
+			updateCode();
+			
+			// Désactive le bouton de téléchargement
+			$('#saveButton').addClass('disabled');
+		}
+		
+		callback();
+	});
+}
+
+function setProgram() {
+	$.post('php/api.php?action=setProgram', { program: encodeURIComponent(JSON.stringify(blockArray)) }, function (data) {
+		if (data === 'UpdatedProgram') {
+			// Désactive le bouton de téléchargement
+			$('#saveButton').addClass('disabled');
+		} else {
+			alert(data);
+		}
+	});
+}
+
+function logout() {
+	$.post('php/api.php?action=logout', function (data) {
+
+		// Cache l'interface
+		$('.container #interface').hide();
+
+		// Affiche le formulaire de connexion
+		$('.container #connectionForm').show();
+	});
+}
+
+function showAlert(type, text) {
+	return '<div class="alert alert-' + type + '"><button type="button" class="close" data-dismiss="alert">×</button>' + (type === 'danger' ? '<i class="fa fa-warning"></i>' : '') + ' ' + text + '</div>';
+}
