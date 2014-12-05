@@ -37,7 +37,7 @@
 					
 					if ($password == $data['mdp']) {
 						$_SESSION['status'] = 'connected';
-						$_SESSION['user'] = $data['id'];
+						$_SESSION['userid'] = $data['id'];
 						$_SESSION['username'] = $data['utilisateur'];
 						$show = 'Connected';
 					} else {
@@ -54,9 +54,7 @@
 		case 'getProgram':
 			bddConnection();
 					
-			$req = 'SELECT *
-				FROM myop_programmes
-				WHERE utilisateur="' . $_SESSION['user'] . '"';
+			$req = 'SELECT * FROM myop_programmes WHERE utilisateur=' . $_SESSION['userid'];
 					
 			if (!($res = $bdd->query($req))) {
 				$show = 'RequestError';
@@ -78,7 +76,7 @@
 				$req = 'SELECT myop_programmes.programme
 					FROM myop_programmes
 					JOIN myop_utilisateurs ON myop_utilisateurs.id=myop_programmes.utilisateur
-					WHERE myop_utilisateurs.utilisateur="' . $user . '"';
+					WHERE myop_utilisateurs.utilisateur=\'' . $user . '\'';
 					
 				if (!($res = $bdd->query($req))) {
 					$show = 'RequestError';
@@ -97,9 +95,7 @@
 			if ($program) {
 				bddConnection();
 						
-				$req = 'SELECT COUNT(*)
-					FROM myop_programmes
-					WHERE utilisateur="' . $_SESSION['user'] . '"';
+				$req = 'SELECT COUNT(*) FROM myop_programmes WHERE utilisateur=' . $_SESSION['userid'];
 						
 				if (!($res = $bdd->query($req))) {
 					$show = 'RequestError';
@@ -108,7 +104,7 @@
 					
 					// Modification
 					if ($data[0] > 0) {
-						$req = 'UPDATE myop_programmes SET programme=\'' . $program . '\' WHERE utilisateur=' . $_SESSION['user'];
+						$req = 'UPDATE myop_programmes SET programme=\'' . $program . '\' WHERE utilisateur=' . $_SESSION['userid'];
 	
 						if (!($res = $bdd->query($req))) {
 							$show = 'RequestError';
@@ -118,7 +114,7 @@
 
 					// Ajout
 					} else {
-						$req = 'INSERT INTO myop_programmes (utilisateur, programme) VALUES (' . $_SESSION['user'] . ', \'' . $program . '\')';
+						$req = 'INSERT INTO myop_programmes (utilisateur, programme) VALUES (' . $_SESSION['userid'] . ', \'' . $program . '\')';
 						
 						if (!($res = $bdd->query($req))) {
 							$show = 'RequestError';

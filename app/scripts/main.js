@@ -7,8 +7,8 @@ var blockArray;
 /* Positionnement des blocs dans l'interface */
 
 var eventBlocks = [
-	{ 'title': 'Évènements MYO', 'blocks': ['fingerSpread', 'fist', 'waveIn', 'waveOut', 'doubleTap', 'rest'] }
-	//{ 'title': 'Évènements NXT', 'blocks': ['soundSup(50)', 'obstacle(20)', 'contact'] }
+	{ 'title': 'Évènements MYO', 'blocks': ['fingerSpread', 'fist', 'waveIn', 'waveOut', 'doubleTap', 'rest'] },
+	{ 'title': 'Évènements NXT', 'blocks': ['soundInf(50)', 'soundSup(50)'] }
 ];
 
 var actionBlocks = [
@@ -61,10 +61,10 @@ function getBlock(blockType, parameter) {
 		block = '<div class="block eventBlock" data-block="rest" data-help="Événement actif lorsqu\'aucun évènement n\'est détecté."><div>Aucun</div></div>';
 		break;
 	case 'soundInf':
-		//block = '<div class="block eventBlock" data-block="soundInf" data-help="Événement déclenché quand l\'intensité sonore devient inférieur au niveau défini par l\'utilisateur."><div>Bruit inférieur à<input type="number" value="' + parameter + '">dB</div></div>';
+		block = '<div class="block eventBlock" data-block="soundInf" data-help="Événement déclenché quand l\'intensité sonore devient inférieur au niveau défini par l\'utilisateur."><div>Bruit inférieur à<input type="number" value="' + parameter + '">dB</div></div>';
 		break;
 	case 'soundSup':
-		//block = '<div class="block eventBlock" data-block="soundSup" data-help="Événement déclenché quand l\'intensité sonore devient supérieur au niveau défini par l\'utilisateur."><div>Bruit supérieur à<input type="number" value="' + parameter + '">dB</div></div>';
+		block = '<div class="block eventBlock" data-block="soundSup" data-help="Événement déclenché quand l\'intensité sonore devient supérieur au niveau défini par l\'utilisateur."><div>Bruit supérieur à<input type="number" value="' + parameter + '">dB</div></div>';
 		break;
 	case 'stop':
 		block = '<div class="block actionBlock" data-block="stop" data-help="Le robot s\'arrêtera et ne bougera plus tant que de nouvelles consignes ne seront pas exécutées."><div>S\'arrêter</div></div>';
@@ -169,10 +169,10 @@ function arrayToCode(blocksArray, level) {
 			code += '<span class="tab"></span>'.repeat(level) + 'if (aucunEvenement() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'soundInf':
-			//code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() < ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() < ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'soundSup':
-			//code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() > ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
+			code += '<span class="tab"></span>'.repeat(level) + '</span>if (niveauSonore() > ' + parameter + ') {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'stop':
 			code += '<span class="tab"></span>'.repeat(level) + 'sarreter();<br />' + (level === 1 ? '<br />' : '');
@@ -751,6 +751,9 @@ function connection() {
 }
 
 function getProgram(callback) {
+	$('.blocksContainer').html('');
+	$('code.java').html('');
+
 	$.get('php/api.php?action=getProgram', function (data) {
 		if (data !== 'NothingError') {
 			arrayToBlocks($.parseJSON(data), $('.blocksContainer'));
