@@ -10,7 +10,7 @@
 	function bddConnection() {
 		global $bdd;
 		$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-		$bdd = new PDO('mysql:host=sql3.exolia.fr;dbname=youbiweb', 'youbi325', 'Boxster987', $pdo_options);
+		$bdd = new PDO('mysql:host=[host];dbname=[db]', '[username]', '[password]', $pdo_options);
 		$bdd->query('SET NAMES UTF8');
 	}
 

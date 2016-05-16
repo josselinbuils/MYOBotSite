@@ -12,9 +12,9 @@ var eventBlocks = [
 ];
 
 var actionBlocks = [
-	{ 'title': 'Actions ponctuelles', 'blocks': ['accelerate', 'decelerate'] }, //playSound
-	{ 'title': 'Actions continues', 'blocks': ['moveForward', 'moveBackward', 'turnLeft', 'turnRight', 'veerLeft', 'veerRight', 'stop'] },
-	{ 'title': 'Actions temporelles', 'blocks': ['timedMoveForward(1)', 'timedMoveBackward(1)', 'timedTurnLeft(1)', 'timedTurnRight(1)', 'timedVeerLeft(1)', 'timedVeerRight(1)', 'timedStop(1)'] }
+	{ 'title': 'Actions ponctuelles', 'blocks': ['accelerate', 'decelerate', 'auxMotorAccelerate', 'auxMotorSlowDown'] }, //playSound
+	{ 'title': 'Actions continues', 'blocks': ['moveForward', 'moveBackward', 'turnLeft', 'turnRight', 'veerLeft', 'veerRight', 'stop', 'auxMotorFoward', 'auxMotorBackward', 'auxMotorStop'] }//,
+	//{ 'title': 'Actions temporelles', 'blocks': ['timedMoveForward(1)', 'timedMoveBackward(1)', 'timedTurnLeft(1)', 'timedTurnRight(1)', 'timedVeerLeft(1)', 'timedVeerRight(1)', 'timedStop(1)'] }
 ];
 
 // Permet de concaténer n fois une chaîne de caractères
@@ -29,6 +29,21 @@ function getBlock(blockType, parameter) {
 	switch (blockType) {
 	case 'accelerate':
 		block = '<div class="block actionBlock" data-block="accelerate" data-help="La vitesse nominale du robot augmentera d\'un certain seuil."><div>Accélérer</div></div>';
+		break;
+	case 'auxMotorAccelerate':
+		block = '<div class="block actionBlock" data-block="auxMotorAccelerate" data-help="La vitesse nominale du moteur secondaire augmentera d\'un certain seuil."><div>Accélérer auxiliaire</div></div>';
+		break;
+	case 'auxMotorBackward':
+		block = '<div class="block actionBlock" data-block="auxMotorBackward" data-help="Le moteur secondaire tournera en arrière tant que de nouvelles consignes ne seront pas exécutées."><div>Tourner auxiliaire (-)</div></div>';
+		break;
+	case 'auxMotorFoward':
+		block = '<div class="block actionBlock" data-block="auxMotorFoward" data-help="Le moteur secondaire tournera en avant tant que de nouvelles consignes ne seront pas exécutées."><div>Tourner auxiliaire (+)</div></div>';
+		break;
+	case 'auxMotorSlowDown':
+		block = '<div class="block actionBlock" data-block="auxMotorSlowDown" data-help="La vitesse nominale du moteur secondaire diminuera d\'un certain seuil."><div>Décélérer auxiliaire</div></div>';
+		break;
+	case 'auxMotorStop':
+		block = '<div class="block actionBlock" data-block="auxMotorStop" data-help="Le moteur secondaire s\'arrêtera et ne bougera plus tant que de nouvelles consignes ne seront pas exécutées."><div>Arrêter auxiliaire</div></div>';
 		break;
 	case 'contact':
 		//block = '<div class="block eventBlock" data-block="contact" data-help="Événement déclenché quand le robot entre en contact avec un obstacle."><div>Contact avec obstacle</div></div>';
@@ -137,6 +152,21 @@ function arrayToCode(blocksArray, level) {
 		switch (blockType) {
 		case 'accelerate':
 			code += '<span class="tab"></span>'.repeat(level) + 'accelerer();<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'auxMotorAccelerate':
+			code += '<span class="tab"></span>'.repeat(level) + 'accelererAux();<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'auxMotorBackward':
+			code += '<span class="tab"></span>'.repeat(level) + 'TournerAuxNegatif();<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'auxMotorFoward':
+			code += '<span class="tab"></span>'.repeat(level) + 'TournerAuxPositif();<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'auxMotorSlowDown':
+			code += '<span class="tab"></span>'.repeat(level) + 'deelererAux();<br />' + (level === 1 ? '<br />' : '');
+			break;
+		case 'auxMotorStop':
+			code += '<span class="tab"></span>'.repeat(level) + 'arreterAux();<br />' + (level === 1 ? '<br />' : '');
 			break;
 		case 'contact':
 			//code += '<span class="tab"></span>'.repeat(level) + 'if (contactAvecObstacle() == true) {<br />[code]<span class="tab">}<br />' + (level === 1 ? '<br />' : '');
@@ -679,7 +709,7 @@ $(function() {
 					$('.blocksContainer .block').attr('draggable', true);
 					$('.blocksContainer .block > div:first-child').append('<span class="fa fa-times-circle removeBlock"></span>');
 					$('input[type=number]').attr('min', 1);
-					$('input[type=number]').attr('max', 30);
+					$('input[type=number]').attr('max', 100);
 					
 					updateCode();
 					
@@ -761,7 +791,7 @@ function getProgram(callback) {
 			$('.blocksContainer .block').attr('draggable', true);
 			$('.blocksContainer .block > div:first-child').append('<span class="fa fa-times-circle removeBlock"></span>');
 			$('input[type=number]').attr('min', 1);
-			$('input[type=number]').attr('max', 30);
+			$('input[type=number]').attr('max', 100);
 			
 			updateCode();
 			
